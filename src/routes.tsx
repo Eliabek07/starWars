@@ -7,14 +7,14 @@ import {
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
-import { ColorSchemeName, Pressable } from "react-native";
+import { ColorSchemeName } from "react-native";
 
 import Colors from "./constants/Colors";
 import useColorScheme from "./hooks/useColorScheme";
 import ModalScreen from "./pages/ModalScreen";
 
 import TabOneScreen from "./pages/Characters";
-import TabTwoScreen from "./pages/Starship";
+import TabTwoScreen from "./pages/Starships";
 import TabThreeScreen from "./pages/Planets";
 import {
   RootStackParamList,
@@ -44,11 +44,11 @@ function RootNavigator() {
       <Stack.Screen
         name="Root"
         component={BottomTabNavigator}
-        options={{ headerShown: false }}
+        options={{ headerShown: false, }}
       />
 
-      <Stack.Group screenOptions={{ presentation: "modal" }}>
-        <Stack.Screen name="Modal" component={ModalScreen} />
+      <Stack.Group screenOptions={{ presentation: "modal", title: "Detalhes", }}>
+        <Stack.Screen name="Modal"  component={ModalScreen} />
       </Stack.Group>
     </Stack.Navigator>
   );
@@ -83,7 +83,7 @@ function BottomTabNavigator() {
         }}
       />
       <BottomTab.Screen
-        name="TabTHree"
+        name="TabThree"
         component={TabThreeScreen}
         options={{
           title: "Planetas",

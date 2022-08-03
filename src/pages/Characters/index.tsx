@@ -99,7 +99,7 @@ export default function TabOneScreen({
           style={{ flex: 1, width: "100%", paddingHorizontal: 16 }}
           ref={flatlistRef}
           data={data}
-          keyExtractor={(_, index) => String(index)}
+          keyExtractor={(_) => String(Math.random() * (Math.random() * 20))}
           renderItem={renderItem}
           onEndReachedThreshold={0.4}
           // bounces

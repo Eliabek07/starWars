@@ -1,7 +1,6 @@
 import React, { Children, ReactNode } from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import Text from '../StyledText'
-// import { Container } from './styles';
+
 interface IButton {
     onPressNavigation: () => void
     children: ReactNode | ReactNode[]

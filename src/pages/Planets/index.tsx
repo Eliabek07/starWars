@@ -4,20 +4,36 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import api from "../services";
+import api from "../../services";
 import { FlatList, SafeAreaView } from "react-native";
 
-import { Text, View } from "../components/Themed";
-import { RootTabScreenProps } from "../types";
+import { Text, View } from "../../components/Themed";
+import { RootTabScreenProps } from "../../types";
 import { useEffect, useRef, useState } from "react";
+import Button from "../../components/Button";
 
 
 interface IItem {
   name: string;
+  climate: string;
+  population: string;
+  terrain: string;
+
 }
 
 interface IItemList {
   item: IItem;
+}
+
+interface IResponse {
+  name: string;
+  climate: string;
+  population: string;
+  terrain: string;
+}
+
+type IReponseData = {
+  results: IResponse[]
 }
 
 export default function TabThreeScreen({
@@ -30,10 +46,19 @@ export default function TabThreeScreen({
   const flatlistRef = useRef(null);
   // const navigation = useNavigation();
 
-  async function getListCharacter() {
+  async function getPLanets() {
     try {
-      const response = await api.get(`/planets?page=${page}`);
-      setData([...data, ...response.data.results]);
+      const { data: dataResponse } = await api.get<IReponseData>(`/planets?page=${page}`);
+
+      const mapData = dataResponse.results.map(item => ({
+        name: item.name,
+        climate: item.climate,
+        population: item.population,
+        terrain: item.terrain,
+      }))
+
+
+      setData([...data, ...mapData]);
     } catch (error) {
       //
     } finally {
@@ -43,50 +68,46 @@ export default function TabThreeScreen({
 
   useEffect(() => {
     setLoading(true);
-    getListCharacter();
+    getPLanets();
   }, []);
 
   const renderItem = ({ item }: IItemList) => {
     return (
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate("Modal");
-        }}
-        style={{
-          width: "100%",
-          backgroundColor: "#fff",
-          marginVertical: 5,
-          padding: 10,
-        }}
+      <Button
+        onPressNavigation={() => true}
       >
-        <Text style={styles.title}>{item.name}</Text>
-      </TouchableOpacity>
+        <Text style={styles.title}>Nome:  <Text style={{ color: 'grey', }}>{item.name}</Text></Text>
+        <Text style={styles.title}>Clima: <Text style={{ color: 'grey', }}>{item.climate}</Text></Text>
+        <Text style={styles.title}>População: <Text style={{ color: 'grey', }}>{item.population}</Text></Text>
+        <Text style={styles.title}>Tipo do terreno: <Text style={{ color: 'grey', }}>{item.terrain}</Text></Text>
+      </Button >
     );
   };
 
   const pullToRefresh = () => {
+    setData([])
     setPage(1);
-    getListCharacter();
+    getPLanets();
 
   };
-  
+
   const nextPage = () => {
     if (isLoading) {
       return;
     }
 
     setPage((prev) => prev + 1);
-    getListCharacter();
+    getPLanets();
   };
 
   return (
     <SafeAreaView style={styles.container}>
       {!isLoading && data.length > 0 ? (
         <FlatList
-          style={{ flex: 1, width: "100%" }}
+          style={styles.containerFlat}
           ref={flatlistRef}
           data={data}
-          keyExtractor={(_, index) => String(index)}
+          keyExtractor={(_) => String(Math.random() * (Math.random() * 20))}
           renderItem={renderItem}
           onEndReachedThreshold={0.4}
           // bounces
@@ -112,6 +133,7 @@ export default function TabThreeScreen({
 }
 
 const styles = StyleSheet.create({
+  containerFlat: { flex: 1, width: "100%", paddingHorizontal: 16 },
   container: {
     flex: 1,
     alignItems: "center",

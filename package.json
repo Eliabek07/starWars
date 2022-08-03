@@ -8,10 +8,22 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "test": "jest --watchAll"
+    "test": "jest --watchAll --coverage --maxWorkers=50%"
   },
   "jest": {
-    "preset": "jest-expo"
+    "preset": "jest-expo",
+    "transformIgnorePatterns": [
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg)"
+    ],
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "**/*.{js,jsx,ts,tsx}",
+      "!**/coverage/**",
+      "!**/node_modules/**",
+      "!**/src/routes.ts",
+      "!**/types.ts",
+      "!**/babel.config.js"
+    ]
   },
   "dependencies": {
     "@expo/vector-icons": "^13.0.0",
@@ -42,6 +54,7 @@
     "@types/react-native": "~0.66.13",
     "jest": "^26.6.3",
     "jest-expo": "~45.0.0",
+    "jest-expo-enzyme": "^1.4.0",
     "react-test-renderer": "17.0.2",
     "typescript": "~4.3.5"
   },
