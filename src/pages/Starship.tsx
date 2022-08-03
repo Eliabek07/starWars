@@ -20,19 +20,19 @@ interface IItemList {
   item: IItem;
 }
 
-export default function TabOneScreen({
+export default function TabTwoScreen({
   navigation,
-}: RootTabScreenProps<"TabOne">) {
+}: RootTabScreenProps<"TabTwo">) {
   const [page, setPage] = useState<number>(1);
   const [isRefresh, setIsRefreshing] = useState<boolean>(false);
   const [isLoading, setLoading] = useState<boolean>(false);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<any>([]);
   const flatlistRef = useRef(null);
   // const navigation = useNavigation();
 
   async function getListCharacter() {
     try {
-      const response = await api.get(`/people?page=${page}`);
+      const response = await api.get(`/starships?page==${page}`);
       setData([...data, ...response.data.results]);
     } catch (error) {
       //
@@ -64,8 +64,11 @@ export default function TabOneScreen({
     );
   };
 
-  const pullToRefresh = () => {};
-  // const renderItem = ({ item }) => {};
+  const pullToRefresh = () => {
+    setPage(1);
+    getListCharacter();
+
+  };
 
   const nextPage = () => {
     if (isLoading) {
@@ -83,7 +86,8 @@ export default function TabOneScreen({
           style={{ flex: 1, width: "100%" }}
           ref={flatlistRef}
           data={data}
-          keyExtractor={(_, index) => String(index)}
+
+          keyExtractor={({ name }, index) => String(name)}
           renderItem={renderItem}
           onEndReachedThreshold={0.4}
           // bounces
