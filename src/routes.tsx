@@ -1,4 +1,4 @@
-import { FontAwesome } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   NavigationContainer,
@@ -13,8 +13,9 @@ import Colors from "./constants/Colors";
 import useColorScheme from "./hooks/useColorScheme";
 import ModalScreen from "./pages/ModalScreen";
 
-import TabOneScreen from "./pages/TabOneScreen";
-import TabTwoScreen from "./pages/TabTwoScreen";
+import TabOneScreen from "./pages/Characters";
+import TabTwoScreen from "./pages/Starship";
+import TabThreeScreen from "./pages/Planets";
 import {
   RootStackParamList,
   RootTabParamList,
@@ -45,7 +46,7 @@ function RootNavigator() {
         component={BottomTabNavigator}
         options={{ headerShown: false }}
       />
-     
+
       <Stack.Group screenOptions={{ presentation: "modal" }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
       </Stack.Group>
@@ -70,30 +71,23 @@ function BottomTabNavigator() {
         component={TabOneScreen}
         options={({ navigation }: RootTabScreenProps<"TabOne">) => ({
           title: "Personagens",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Pressable
-              onPress={() => navigation.navigate("Modal")}
-              style={({ pressed }) => ({
-                opacity: pressed ? 0.5 : 1,
-              })}
-            >
-              <FontAwesome
-                name="info-circle"
-                size={25}
-                color={Colors[colorScheme].text}
-                style={{ marginRight: 15 }}
-              />
-            </Pressable>
-          ),
+          tabBarIcon: ({ color }) => <TabBarIcon name="people" color={color} />,
         })}
       />
       <BottomTab.Screen
         name="TabTwo"
         component={TabTwoScreen}
         options={{
-          title: "Tab Two",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: "Naves",
+          tabBarIcon: ({ color }) => <TabBarIcon name="airplane" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="TabTHree"
+        component={TabThreeScreen}
+        options={{
+          title: "Planetas",
+          tabBarIcon: ({ color }) => <TabBarIcon name="planet-outline" color={color} />,
         }}
       />
     </BottomTab.Navigator>
@@ -101,8 +95,8 @@ function BottomTabNavigator() {
 }
 
 function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>["name"];
+  name: React.ComponentProps<typeof Ionicons>["name"];
   color: string;
 }) {
-  return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
+  return <Ionicons size={30} style={{ marginBottom: -3 }} {...props} />;
 }
