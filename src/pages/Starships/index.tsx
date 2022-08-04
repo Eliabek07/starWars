@@ -4,21 +4,33 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import api from "../services";
+import api from "../../services";
 import { FlatList, SafeAreaView } from "react-native";
 
-import { Text, View } from "../components/Themed";
-import { RootTabScreenProps } from "../types";
+import { Text, View } from "../../components/Themed";
+import { RootTabScreenProps } from "../../types";
 import { useEffect, useRef, useState } from "react";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import Button from "../../components/Button";
 
 
 interface IItem {
-  name: string;
+  name: string
+  model: string
+  manufacturer: string
+  cost_in_credits: string
+  length: string
+  max_atmosphering_speed: string
 }
 
 interface IItemList {
   item: IItem;
 }
+
+type IReponseData = {
+  results: IItem[]
+}
+
 
 export default function TabTwoScreen({
   navigation,
@@ -30,10 +42,20 @@ export default function TabTwoScreen({
   const flatlistRef = useRef(null);
   // const navigation = useNavigation();
 
-  async function getListCharacter() {
+  async function getStarships() {
     try {
-      const response = await api.get(`/starships?page==${page}`);
-      setData([...data, ...response.data.results]);
+      const { data: dataResponse } = await api.get<IReponseData>(`/starships?page=${page}`);
+
+      const mapData = dataResponse.results.map(item => ({
+        name: item.name,
+        model: item.manufacturer,
+        manufacturer: item.manufacturer,
+        cost_in_credits: item.cost_in_credits,
+        length: item.length,
+        max_atmosphering_speed: item.max_atmosphering_speed,
+      }))
+
+      setData([...data, ...mapData]);
     } catch (error) {
       //
     } finally {
@@ -43,30 +65,28 @@ export default function TabTwoScreen({
 
   useEffect(() => {
     setLoading(true);
-    getListCharacter();
+    getStarships();
   }, []);
 
   const renderItem = ({ item }: IItemList) => {
     return (
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate("Modal");
-        }}
-        style={{
-          width: "100%",
-          backgroundColor: "#fff",
-          marginVertical: 5,
-          padding: 10,
-        }}
+      <Button
+        onPressNavigation={() => true}
       >
-        <Text style={styles.title}>{item.name}</Text>
-      </TouchableOpacity>
+        <Text style={styles.title}>Nome:  <Text style={{ color: 'grey', }}>{item.name}</Text></Text>
+        <Text style={styles.title}>Modelo: <Text style={{ color: 'grey', }}>{item.model}</Text></Text>
+        <Text style={styles.title}>Manufaturação: <Text style={{ color: 'grey', }}>{item.manufacturer}</Text></Text>
+        <Text style={styles.title}>Preço em créditos: <Text style={{ color: 'grey', }}>{item.cost_in_credits}</Text></Text>
+        <Text style={styles.title}>Velocidade Máxima: <Text style={{ color: 'grey', }}>{item.max_atmosphering_speed}</Text></Text>
+      </Button>
     );
   };
 
   const pullToRefresh = () => {
+    setData([])
     setPage(1);
-    getListCharacter();
+
+    getStarships();
 
   };
 
@@ -76,18 +96,18 @@ export default function TabTwoScreen({
     }
 
     setPage((prev) => prev + 1);
-    getListCharacter();
+    getStarships();
   };
 
   return (
     <SafeAreaView style={styles.container}>
       {!isLoading && data.length > 0 ? (
         <FlatList
-          style={{ flex: 1, width: "100%" }}
+          style={{ flex: 1, width: "100%", paddingHorizontal: 16 }}
           ref={flatlistRef}
           data={data}
 
-          keyExtractor={({ name }, index) => String(name)}
+          keyExtractor={(_) => String(Math.random() * (Math.random() * 20))}
           renderItem={renderItem}
           onEndReachedThreshold={0.4}
           // bounces
