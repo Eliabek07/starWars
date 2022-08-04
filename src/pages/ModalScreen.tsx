@@ -28,6 +28,7 @@ export default function ModalScreen({ route }) {
       //
     }
   }
+  console.log("asdasd", route.params)
 
   useEffect(() => {
     getHomeWorld()
