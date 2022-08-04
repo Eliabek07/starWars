@@ -18,7 +18,7 @@ export default function ModalScreen({ route }) {
     gender,
     homeworld
   } = route.params.item
-  const [data, setData] = useState([])
+  const [data, setData] = useState<any>([])
 
   async function getHomeWorld() {
     try {
@@ -33,16 +33,37 @@ export default function ModalScreen({ route }) {
     getHomeWorld()
   }, [])
 
+  const mapTexts = [{
+    title: 'Nome',
+    message: name
+  }, {
+    title: 'Gênero',
+    message: gender
+  }, {
+    title: 'Nascimento',
+    message: birth_year
+  }, {
+    title: 'Cor da pele',
+    message: skin_color
+  }, {
+    title: 'Peso',
+    message: mass
+  }, {
+    title: 'Altura',
+    message: height
+  }, {
+    title: 'Cor do cabelo',
+    message: hair_color
+  },]
+
   return (
     <View style={styles.container}>
       <Text style={[styles.title, { textAlign: 'center' }]}>Detalhes do personagem</Text>
-      <Text style={styles.title}>Nome:  <Text style={{ color: 'grey', }}>{name}</Text></Text>
-      <Text style={styles.title}>Genero:  <Text style={{ color: 'grey', }}>{gender}</Text></Text>
-      <Text style={styles.title}>Nascimento:  <Text style={{ color: 'grey', }}>{birth_year}</Text></Text>
-      <Text style={styles.title}>Cor da pele:  <Text style={{ color: 'grey', }}>{skin_color}</Text></Text>
-      <Text style={styles.title}>Peso: <Text style={{ color: 'grey', }}>{mass}</Text></Text>
-      <Text style={styles.title}>Altura: <Text style={{ color: 'grey', }}>{height}</Text></Text>
-      <Text style={styles.title}>Cor do cabelo: <Text style={{ color: 'grey', }}>{hair_color}</Text></Text>
+
+      {mapTexts.map(({ title, message }) => (
+        <Text key={title} style={styles.title}>{title}:  <Text style={{ color: 'grey', }}>{message}</Text></Text>
+      ))}
+
       <Text style={styles.title}>Cor dos olhos: <MaterialCommunityIcons style={{
         justifyContent: "center",
         textAlignVertical: 'bottom',
@@ -54,10 +75,10 @@ export default function ModalScreen({ route }) {
       />
       <Text style={[styles.title, { textAlign: 'center' }]}>Detalhes do planeta</Text>
 
-      <Text style={styles.title}>Nome:  <Text style={{ color: 'grey', }}>{data.name}</Text></Text>
-      <Text style={styles.title}>Clima: <Text style={{ color: 'grey', }}>{data.climate}</Text></Text>
-      <Text style={styles.title}>População: <Text style={{ color: 'grey', }}>{data.population}</Text></Text>
-      <Text style={styles.title}>Tipo do terreno: <Text style={{ color: 'grey', }}>{data.terrain}</Text></Text>
+      <Text style={styles.title}>Nome:  <Text style={{ color: 'grey', }}>{data.name || 'N/a'}</Text></Text>
+      <Text style={styles.title}>Clima: <Text style={{ color: 'grey', }}>{data.climate || 'N/a'}</Text></Text>
+      <Text style={styles.title}>População: <Text style={{ color: 'grey', }}>{data.population || 'N/a'}</Text></Text>
+      <Text style={styles.title}>Tipo do terreno: <Text style={{ color: 'grey', }}>{data.terrain || 'N/a'}</Text></Text>
       <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
     </View>
   );
