@@ -1,37 +1,16 @@
 import {
   ActivityIndicator,
   RefreshControl,
-  StyleSheet,
-  TouchableOpacity,
 } from "react-native";
 import api from "../../services";
-import { FlatList, SafeAreaView } from "react-native";
 
-import { Text, View } from "../../components/Themed";
 import { RootTabScreenProps } from "../../types";
 import { useEffect, useRef, useState } from "react";
 import Button from "../../components/Button";
 import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { IItemList, IResponse } from "./types";
+import * as S from './styles';
 
-interface IItem {
-  name: string;
-  height: string
-  mass: string
-  hair_color: string
-  skin_color: string
-  eye_color: string
-  birth_year: string
-  gender: string
-  homeworld: string
-}
-
-interface IItemList {
-  item: IItem;
-}
-
-type IResponse = {
-  results: IItem[]
-}
 
 export default function TabOneScreen({
   navigation,
@@ -57,9 +36,6 @@ export default function TabOneScreen({
         gender: item.gender,
         homeworld: item.homeworld
       }))
-      console.log("asdasd", mapResponse)
-
-
       setData([...data, ...mapResponse]);
     } catch (error) {
       //
@@ -68,10 +44,13 @@ export default function TabOneScreen({
     }
   }
 
-  useEffect(() => {
-    setLoading(true);
+  const handleLoading = () => {
     setData([])
     getListCharacter();
+  }
+
+  useEffect(() => {
+    handleLoading()
   }, []);
 
   const renderItem = ({ item }: IItemList) => {
@@ -81,24 +60,20 @@ export default function TabOneScreen({
           navigation.navigate("Modal", { item });
         }}
       >
-        <Text style={styles.title}>Nome: <Text style={{ color: 'grey', }}>{item.name}</Text></Text>
-        <Text style={styles.title}>Altura: <Text style={{ color: 'grey', }}>{item.height}</Text></Text>
-        <Text style={styles.title}>Cor do cabelo: <Text style={{ color: 'grey', }}>{item.hair_color}</Text></Text>
-        <Text style={styles.title}>Peso: <Text style={{ color: 'grey', }}>{item.mass}</Text></Text>
-        <Text style={styles.title}>Cor dos olhos: <MaterialCommunityIcons style={{
-          justifyContent: "center",
-          textAlignVertical: 'bottom',
-        }} size={30} color={item.eye_color} name="eye-outline" /></Text>
+        <S.Content>
+          <S.TextInfo>Nome: <S.TextDetail>{item.name}</S.TextDetail></S.TextInfo>
+          <S.TextInfo>Altura: <S.TextDetail>{item.height}</S.TextDetail></S.TextInfo>
+          <S.TextInfo>Cor do cabelo: <S.TextDetail>{item.hair_color}</S.TextDetail></S.TextInfo>
+          <S.TextInfo>Peso: <S.TextDetail>{item.mass}</S.TextDetail></S.TextInfo>
+          <S.TextInfo>Cor dos olhos: <MaterialCommunityIcons size={30} color={item.eye_color || 'red'} name="eye-outline" /></S.TextInfo>
+        </S.Content>
       </Button >
     );
   };
 
   const pullToRefresh = () => {
-    setLoading(true);
-    setData([])
+    handleLoading()
     setPage(1);
-    getListCharacter();
-
   };
 
   const nextPage = () => {
@@ -111,51 +86,26 @@ export default function TabOneScreen({
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <S.Container>
       {!isLoading && data.length > 0 ? (
-        <FlatList
-          style={{ flex: 1, width: "100%", paddingHorizontal: 16 }}
+        <S.List
           ref={flatlistRef}
           data={data}
           keyExtractor={(_) => String(Math.random() * (Math.random() * 20))}
           renderItem={renderItem}
+          showsVerticalScrollIndicator={false}
           onEndReachedThreshold={0.4}
-          // bounces
           onEndReached={nextPage}
           refreshControl={
             <RefreshControl refreshing={isRefresh} onRefresh={pullToRefresh} />
           }
         />
       ) : (
-        <View
-          style={{
-            flex: 1,
-            width: "100%",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
+        <S.Container>
           <ActivityIndicator size="large" color={"grey"} />
-        </View>
-      )}
-    </SafeAreaView>
+        </S.Container>
+      )
+      }
+    </S.Container >
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-});

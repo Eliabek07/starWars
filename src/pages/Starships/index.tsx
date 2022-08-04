@@ -1,16 +1,12 @@
 import {
   ActivityIndicator,
   RefreshControl,
-  StyleSheet,
-  TouchableOpacity,
 } from "react-native";
 import api from "../../services";
-import { FlatList, SafeAreaView } from "react-native";
+import * as S from './styles';
 
-import { Text, View } from "../../components/Themed";
 import { RootTabScreenProps } from "../../types";
 import { useEffect, useRef, useState } from "react";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Button from "../../components/Button";
 
 
@@ -31,16 +27,12 @@ type IReponseData = {
   results: IItem[]
 }
 
-
-export default function TabTwoScreen({
-  navigation,
-}: RootTabScreenProps<"TabTwo">) {
+export default function TabTwoScreen({ }: RootTabScreenProps<"TabTwo">) {
   const [page, setPage] = useState<number>(1);
   const [isRefresh, setIsRefreshing] = useState<boolean>(false);
   const [isLoading, setLoading] = useState<boolean>(false);
   const [data, setData] = useState<any>([]);
   const flatlistRef = useRef(null);
-  // const navigation = useNavigation();
 
   async function getStarships() {
     try {
@@ -73,11 +65,11 @@ export default function TabTwoScreen({
       <Button
         onPressNavigation={() => true}
       >
-        <Text style={styles.title}>Nome:  <Text style={{ color: 'grey', }}>{item.name}</Text></Text>
-        <Text style={styles.title}>Modelo: <Text style={{ color: 'grey', }}>{item.model}</Text></Text>
-        <Text style={styles.title}>Manufaturação: <Text style={{ color: 'grey', }}>{item.manufacturer}</Text></Text>
-        <Text style={styles.title}>Preço em créditos: <Text style={{ color: 'grey', }}>{item.cost_in_credits}</Text></Text>
-        <Text style={styles.title}>Velocidade Máxima: <Text style={{ color: 'grey', }}>{item.max_atmosphering_speed}</Text></Text>
+        <S.TextInfo>Nome: <S.TextDetail>{item.name}</S.TextDetail></S.TextInfo>
+        <S.TextInfo>Modelo: <S.TextDetail>{item.model}</S.TextDetail></S.TextInfo>
+        <S.TextInfo>Manufaturação: <S.TextDetail>{item.manufacturer}</S.TextDetail></S.TextInfo>
+        <S.TextInfo>Preço em créditos: <S.TextDetail>{item.cost_in_credits}</S.TextDetail></S.TextInfo>
+        <S.TextInfo>Velocidade Máxima: <S.TextDetail>{item.max_atmosphering_speed}</S.TextDetail></S.TextInfo>
       </Button>
     );
   };
@@ -100,51 +92,27 @@ export default function TabTwoScreen({
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <S.Container>
       {!isLoading && data.length > 0 ? (
-        <FlatList
-          style={{ flex: 1, width: "100%", paddingHorizontal: 16 }}
+        <S.List
           ref={flatlistRef}
           data={data}
 
           keyExtractor={(_) => String(Math.random() * (Math.random() * 20))}
           renderItem={renderItem}
           onEndReachedThreshold={0.4}
-          // bounces
+          showsVerticalScrollIndicator={false}
           onEndReached={nextPage}
           refreshControl={
             <RefreshControl refreshing={isRefresh} onRefresh={pullToRefresh} />
           }
         />
       ) : (
-        <View
-          style={{
-            flex: 1,
-            width: "100%",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
+        <S.Container>
           <ActivityIndicator size="large" color={"grey"} />
-        </View>
+        </S.Container>
       )}
-    </SafeAreaView>
+    </S.Container>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-});
