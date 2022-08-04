@@ -78,7 +78,7 @@ export default function TabOneScreen({
 
         }}
       >
-        <Text style={styles.title}>Nome:  <Text style={{ color: 'grey', }}>{item.name}</Text></Text>
+        <Text style={styles.title}>Nome: <Text style={{ color: 'grey', }}>{item.name}</Text></Text>
         <Text style={styles.title}>Altura: <Text style={{ color: 'grey', }}>{item.height}</Text></Text>
         <Text style={styles.title}>Cor do cabelo: <Text style={{ color: 'grey', }}>{item.hair_color}</Text></Text>
         <Text style={styles.title}>Peso: <Text style={{ color: 'grey', }}>{item.mass}</Text></Text>
@@ -97,7 +97,6 @@ export default function TabOneScreen({
     getListCharacter();
 
   };
-  // const renderItem = ({ item }) => {};
 
   const nextPage = () => {
     if (isLoading) {
