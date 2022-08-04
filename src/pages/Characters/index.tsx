@@ -36,7 +36,7 @@ export default function TabOneScreen({
   const [isLoading, setLoading] = useState<boolean>(false);
   const [data, setData] = useState<any>([]);
   const flatlistRef = useRef(null);
-  // const navigation = useNavigation();
+
 
   async function getListCharacter() {
     try {
@@ -59,18 +59,19 @@ export default function TabOneScreen({
     return (
       <Button
         onPressNavigation={() => {
-          navigation.navigate("Modal");
+          navigation.navigate("Modal", { item });
+
         }}
       >
         <Text style={styles.title}>Nome:  <Text style={{ color: 'grey', }}>{item.name}</Text></Text>
         <Text style={styles.title}>Altura: <Text style={{ color: 'grey', }}>{item.height}</Text></Text>
         <Text style={styles.title}>Cor do cabelo: <Text style={{ color: 'grey', }}>{item.hair_color}</Text></Text>
         <Text style={styles.title}>Peso: <Text style={{ color: 'grey', }}>{item.mass}</Text></Text>
-        <Text style={styles.title }>Cor dos olhos: <MaterialCommunityIcons style={{
+        <Text style={styles.title}>Cor dos olhos: <MaterialCommunityIcons style={{
           justifyContent: "center",
           textAlignVertical: 'bottom',
         }} size={30} color={item.eye_color} name="eye-outline" /></Text>
-      </Button>
+      </Button >
     );
   };
 
