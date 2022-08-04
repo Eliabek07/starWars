@@ -1,50 +1,21 @@
 import {
   ActivityIndicator,
   RefreshControl,
-  StyleSheet,
-  TouchableOpacity,
 } from "react-native";
 import api from "../../services";
-import { FlatList, SafeAreaView } from "react-native";
 
-import { Text, View } from "../../components/Themed";
 import { RootTabScreenProps } from "../../types";
 import { useEffect, useRef, useState } from "react";
 import Button from "../../components/Button";
+import { IItemList, IReponseData } from "./types";
+import * as S from './styles';
 
-
-interface IItem {
-  name: string;
-  climate: string;
-  population: string;
-  terrain: string;
-
-}
-
-interface IItemList {
-  item: IItem;
-}
-
-interface IResponse {
-  name: string;
-  climate: string;
-  population: string;
-  terrain: string;
-}
-
-type IReponseData = {
-  results: IResponse[]
-}
-
-export default function TabThreeScreen({
-  navigation,
-}: RootTabScreenProps<"TabOne">) {
+export default function TabThreeScreen({ }: RootTabScreenProps<"TabOne">) {
   const [page, setPage] = useState<number>(1);
   const [isRefresh, setIsRefreshing] = useState<boolean>(false);
   const [isLoading, setLoading] = useState<boolean>(false);
   const [data, setData] = useState<any>([]);
   const flatlistRef = useRef(null);
-  // const navigation = useNavigation();
 
   async function getPLanets() {
     try {
@@ -76,10 +47,13 @@ export default function TabThreeScreen({
       <Button
         onPressNavigation={() => true}
       >
-        <Text style={styles.title}>Nome:  <Text style={{ color: 'grey', }}>{item.name}</Text></Text>
-        <Text style={styles.title}>Clima: <Text style={{ color: 'grey', }}>{item.climate}</Text></Text>
-        <Text style={styles.title}>População: <Text style={{ color: 'grey', }}>{item.population}</Text></Text>
-        <Text style={styles.title}>Tipo do terreno: <Text style={{ color: 'grey', }}>{item.terrain}</Text></Text>
+
+        <S.TextInfo>Nome: <S.TextDetail>{item.name}</S.TextDetail></S.TextInfo>
+        <S.TextInfo>Clime: <S.TextDetail>{item.climate}</S.TextDetail></S.TextInfo>
+        <S.TextInfo>População: <S.TextDetail>{item.population}</S.TextDetail></S.TextInfo>
+        <S.TextInfo>Tipo do terreno: <S.TextDetail>{item.terrain}</S.TextDetail></S.TextInfo>
+
+
       </Button >
     );
   };
@@ -101,51 +75,27 @@ export default function TabThreeScreen({
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <S.Container>
       {!isLoading && data.length > 0 ? (
-        <FlatList
-          style={styles.containerFlat}
+        <S.List
           ref={flatlistRef}
           data={data}
           keyExtractor={(_) => String(Math.random() * (Math.random() * 20))}
           renderItem={renderItem}
           onEndReachedThreshold={0.4}
-          // bounces
+          showsVerticalScrollIndicator={false}
           onEndReached={nextPage}
           refreshControl={
             <RefreshControl refreshing={isRefresh} onRefresh={pullToRefresh} />
           }
         />
       ) : (
-        <View
-          style={{
-            flex: 1,
-            width: "100%",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
+        <S.Container>
           <ActivityIndicator size="large" color={"grey"} />
-        </View>
+        </S.Container>
       )}
-    </SafeAreaView>
+    </S.Container>
   );
 }
 
-const styles = StyleSheet.create({
-  containerFlat: { flex: 1, width: "100%", paddingHorizontal: 16 },
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-});
+
