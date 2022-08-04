@@ -23,6 +23,9 @@
       "!**/src/routes.ts",
       "!**/types.ts",
       "!**/babel.config.js"
+    ],
+    "setupFiles": [
+      "<rootDir>/jest.setup.js"
     ]
   },
   "dependencies": {
@@ -50,8 +53,12 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
+    "@types/enzyme": "^3.10.12",
     "@types/react": "~17.0.21",
     "@types/react-native": "~0.66.13",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.6",
+    "enzyme-to-json": "^3.6.2",
     "jest": "^26.6.3",
     "jest-expo": "~45.0.0",
     "jest-expo-enzyme": "^1.4.0",

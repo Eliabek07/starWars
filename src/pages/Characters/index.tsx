@@ -22,6 +22,7 @@ interface IItem {
   eye_color: string
   birth_year: string
   gender: string
+  homeworld: string
 }
 
 interface IItemList {
@@ -54,7 +55,10 @@ export default function TabOneScreen({
         eye_color: item.eye_color,
         birth_year: item.birth_year,
         gender: item.gender,
+        homeworld: item.homeworld
       }))
+      console.log("asdasd", mapResponse)
+
 
       setData([...data, ...mapResponse]);
     } catch (error) {
@@ -75,7 +79,6 @@ export default function TabOneScreen({
       <Button
         onPressNavigation={() => {
           navigation.navigate("Modal", { item });
-
         }}
       >
         <Text style={styles.title}>Nome: <Text style={{ color: 'grey', }}>{item.name}</Text></Text>
