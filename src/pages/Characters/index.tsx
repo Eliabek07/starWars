@@ -28,6 +28,10 @@ interface IItemList {
   item: IItem;
 }
 
+type IResponse = {
+  results: IItem[]
+}
+
 export default function TabOneScreen({
   navigation,
 }: RootTabScreenProps<"TabOne">) {
@@ -36,12 +40,23 @@ export default function TabOneScreen({
   const [isLoading, setLoading] = useState<boolean>(false);
   const [data, setData] = useState<any>([]);
   const flatlistRef = useRef(null);
-  // const navigation = useNavigation();
+
 
   async function getListCharacter() {
     try {
-      const response = await api.get(`/people?page=${page}`);
-      setData([...data, ...response.data.results]);
+      const { data: dataResponse } = await api.get<IResponse>(`/people?page=${page}`);
+      const mapResponse = dataResponse.results.map(item => ({
+        name: item.name,
+        height: item.height,
+        mass: item.mass,
+        hair_color: item.hair_color,
+        skin_color: item.skin_color,
+        eye_color: item.eye_color,
+        birth_year: item.birth_year,
+        gender: item.gender,
+      }))
+
+      setData([...data, ...mapResponse]);
     } catch (error) {
       //
     } finally {
@@ -59,18 +74,19 @@ export default function TabOneScreen({
     return (
       <Button
         onPressNavigation={() => {
-          navigation.navigate("Modal");
+          navigation.navigate("Modal", { item });
+
         }}
       >
         <Text style={styles.title}>Nome:  <Text style={{ color: 'grey', }}>{item.name}</Text></Text>
         <Text style={styles.title}>Altura: <Text style={{ color: 'grey', }}>{item.height}</Text></Text>
         <Text style={styles.title}>Cor do cabelo: <Text style={{ color: 'grey', }}>{item.hair_color}</Text></Text>
         <Text style={styles.title}>Peso: <Text style={{ color: 'grey', }}>{item.mass}</Text></Text>
-        <Text style={styles.title }>Cor dos olhos: <MaterialCommunityIcons style={{
+        <Text style={styles.title}>Cor dos olhos: <MaterialCommunityIcons style={{
           justifyContent: "center",
           textAlignVertical: 'bottom',
         }} size={30} color={item.eye_color} name="eye-outline" /></Text>
-      </Button>
+      </Button >
     );
   };
 
